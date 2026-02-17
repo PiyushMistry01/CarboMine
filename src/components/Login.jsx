@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
 const Login = () => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     email: "",
     password: ""
@@ -12,10 +17,23 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
-    // Later: Firebase login
+
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        form.email,
+        form.password
+      );
+
+      // ✅ Redirect to dashboard after login
+      navigate("/dashboard");
+
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
   };
 
   return (
@@ -50,10 +68,9 @@ const Login = () => {
           </button>
         </form>
 
-           <p className="footer-text">
-             New member? <Link to="/signup">Signup!</Link>
-           </p>
-
+        <p className="footer-text">
+          New member? <Link to="/signup">Signup!</Link>
+        </p>
       </div>
     </div>
   );
