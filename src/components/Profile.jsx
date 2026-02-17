@@ -1,6 +1,6 @@
 import React from "react";
 
-const Dashboard = () => {
+const Profile = () => {
   return (
     <div>
       <h1>Welcome to CarboMine Dashboard 🚀</h1>
@@ -8,4 +8,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Profile;

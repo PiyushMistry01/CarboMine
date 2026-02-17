@@ -28,7 +28,7 @@ const Login = () => {
       );
 
       // ✅ Redirect to dashboard after login
-      navigate("/dashboard");
+      navigate("/profile");
 
     } catch (error) {
       console.error(error);
