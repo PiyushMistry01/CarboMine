@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
+
 
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -18,23 +21,34 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      await signInWithEmailAndPassword(
-        auth,
-        form.email,
-        form.password
-      );
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      form.email,
+      form.password
+    );
 
-      // ✅ Redirect to dashboard after login
+    const uid = userCredential.user.uid;
+
+    // 🔍 Check if mine info exists
+    const userDoc = await getDoc(doc(db, "users", uid));
+
+    if (userDoc.exists() && userDoc.data().mineInfo) {
+      // Mine already added → go to profile
       navigate("/profile");
-
-    } catch (error) {
-      console.error(error);
-      alert(error.message);
+    } else {
+      // First time user → go to mine setup form
+      navigate("/minesetup");
     }
-  };
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+};
+
 
   return (
     <div className="login-container">

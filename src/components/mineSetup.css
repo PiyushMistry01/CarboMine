@@ -1,0 +1,85 @@
+/* Full screen background */
+.minesetup-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #181818;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Card */
+.minesetup-card {
+  background: rgba(76, 72, 72, 0.12);
+  backdrop-filter: blur(12px);
+  padding: 40px;
+  height: 60vh;
+  width: 32vw;
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+.minesetup-card:hover {
+  height: 62vh;
+  width: 34vw;
+  background: rgba(29, 26, 26, 0.12);
+  transition-duration: 0.4s;
+}
+
+/* Title */
+.minesetup-card h1 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Subtitle */
+.minesetup-subtitle {
+  font-size: 25px;
+  margin-bottom: 20px;
+  margin-top: 0%;
+  color: #008080;
+  font-weight: bold;
+}
+
+/* Input fields */
+.minesetup-input {
+  margin-bottom: 20px;
+}
+
+.minesetup-input input,
+.minesetup-input select {
+  width: 90%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Button */
+.minesetup-btn {
+  width: 60%;
+  padding: 12px;
+  background: #008080;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.minesetup-btn:hover {
+  background: #30949d;
+}
+
+/* Footer */
+.minesetup-footer {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #e0f2f1;
+}
