@@ -60,6 +60,7 @@ const MethaneForm = () => {
 
           <button
             className="next-btn"
+            disabled={!coal}
             onClick={() => setStep(2)}
           >
             Next
@@ -93,7 +94,7 @@ const MethaneForm = () => {
 
           <div className="form-buttons">
             <button className="prev-btn" onClick={() => setStep(1)}>Previous</button>
-            <button className="next-btn" onClick={() => setStep(3)}>Next</button>
+            <button className="next-btn" disabled={!diesel} onClick={() => setStep(3)}>Next</button>
           </div>
         </>
       )}
@@ -124,7 +125,7 @@ const MethaneForm = () => {
 
           <div className="form-buttons">
             <button className="prev-btn" onClick={() => setStep(2)}>Previous</button>
-            <button className="next-btn" onClick={() => setStep(4)}>Next</button>
+            <button className="next-btn" disabled={!electricity} onClick={() => setStep(4)}>Next</button>
           </div>
         </>
       )}
@@ -155,7 +156,7 @@ const MethaneForm = () => {
 
           <div className="form-buttons">
             <button className="prev-btn" onClick={() => setStep(3)}>Previous</button>
-            <button className="next-btn">
+            <button className="next-btn" disabled={!explosives}>
               Submit
             </button>
           </div>
