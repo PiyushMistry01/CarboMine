@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import "./profile.css";
 
-const MethaneForm = () => {
-  const [step, setStep] = useState(1);
+const MethaneForm = ({ step,setStep }) => {
 
   // -------- Fugitive Methane --------
   const [coal, setCoal] = useState("");
