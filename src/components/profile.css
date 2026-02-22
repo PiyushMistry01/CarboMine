@@ -54,11 +54,13 @@
 /* Form */
 .form-card {
   margin: 40px;
+  margin-top: 0%;
   padding: 40px;
   background: rgba(76, 72, 72, 0.12);
   backdrop-filter: blur(12px);
   border-radius: 15px;
   width: 40%;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
 }
 
 .form-info {
@@ -87,25 +89,6 @@
   cursor: pointer;
 }
 
-/* Form + progress layout */
-.form-layout {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  padding: 40px;
-}
-
-/* Left form */
-.form-area {
-  flex: 2;
-}
-
-/* Right progress panel */
-.progress-area {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
 
 /* Navbar styling */
 .navbar {
@@ -136,7 +119,7 @@
 
 /* Mine name section */
 .mine-section {
-  padding: 30px 40px;
+  padding: 30px 60px;
 }
 
 .carbon-btn {
@@ -153,3 +136,7 @@
   background: #30949d;
 }
 
+.AlignForm {
+  display: flex;
+  margin-top: 0%;
+}

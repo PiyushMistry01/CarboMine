@@ -4,6 +4,7 @@ import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import MethaneForm from "./MethaneForm";
+import ProgressCard from "./ProgressCard";
 import "./profile.css";
 
 const Profile = () => {
@@ -59,7 +60,10 @@ const Profile = () => {
       </div>
 
       {/* Form appears on same page */}
+      <div className="AlignForm">
       {showForm && <MethaneForm />}
+      {showForm && <ProgressCard currentStep={1} />}
+      </div>
 
     </div>
   );
