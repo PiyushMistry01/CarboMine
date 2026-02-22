@@ -1,7 +1,47 @@
 import React, { useState } from "react";
 import "./profile.css";
+import { useNavigate } from "react-router-dom";
+import { db, auth } from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const MethaneForm = ({ step,setStep }) => {
+  const navigate = useNavigate();
+
+const handleSubmit = async () => {
+  const user = auth.currentUser;
+
+  try {
+    await addDoc(
+      collection(db, "users", user.uid, "emissions"),
+      {
+        methane,
+        diesel: dieselEmission,
+        electricity: electricityEmission,
+        explosives: explosiveEmission,
+        total:
+          methane +
+          dieselEmission +
+          electricityEmission +
+          explosiveEmission,
+        createdAt: serverTimestamp(),
+      }
+    );
+
+    console.log("Emission saved");
+
+    navigate("/dashboard", {
+      state: {
+        methane,
+        diesel: dieselEmission,
+        electricity: electricityEmission,
+        explosives: explosiveEmission,
+      },
+    });
+
+  } catch (error) {
+    console.error("Error saving emission:", error);
+  }
+};
 
   // -------- Fugitive Methane --------
   const [coal, setCoal] = useState("");
@@ -155,8 +195,13 @@ const MethaneForm = ({ step,setStep }) => {
 
           <div className="form-buttons">
             <button className="prev-btn" onClick={() => setStep(3)}>Previous</button>
-            <button className="next-btn" disabled={!explosives}>
-              Submit
+            <button
+              type="button"
+              className="next-btn"
+              disabled={!explosives}
+              onClick={handleSubmit}
+            >
+            Submit
             </button>
           </div>
         </>
