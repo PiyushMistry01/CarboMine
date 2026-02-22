@@ -4,9 +4,9 @@ import "./progress.css";
 const ProgressCard = ({ currentStep = 1 }) => {
   const steps = [
     "Fugitive Methane",
-    "Electricity Usage",
-    "Diesel Consumption",
-    "Explosives & Others"
+    "Operational Fuel",
+    "Electricity",
+    "Explosives"
   ];
 
   return (
