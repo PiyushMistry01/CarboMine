@@ -117,9 +117,45 @@
   color: white;
   cursor: pointer;
   font-size: 16px;
+  margin-left: 10px;
 }
 
 .predict-btn:hover {
   background: #30949d;
+}
+
+.pdf-btn {
+  padding: 14px 25px;
+  background: #008080;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.pdf-btn:hover {
+  background: #30949d;
+}
+
+.pdf-mode {
+  background: white !important;
+  color: black !important;
+}
+
+.pdf-mode h1,
+.pdf-mode h2,
+.pdf-mode h3,
+.pdf-mode p,
+.pdf-mode span {
+  color: black !important;
+}
+
+.pdf-mode .emission-card1,
+.pdf-mode .emission-card2,
+.pdf-mode .graph-box,
+.pdf-mode .insight-box {
+  background: #f5f5f5 !important;
+  color: black !important;
 }
 

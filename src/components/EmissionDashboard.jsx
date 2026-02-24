@@ -3,6 +3,8 @@ import "./dashboard.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { signOut } from "firebase/auth";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import {
   doc,
   getDoc,
@@ -52,6 +54,32 @@ const EmissionDashboard = () => {
 
     fetchMine();
   }, []);
+
+  const downloadPDF = async () => {
+  const element = document.querySelector(".dashboard-container");
+
+  // ✅ Apply PDF mode temporarily
+  element.classList.add("pdf-mode");
+
+  const canvas = await html2canvas(element, {
+    scale: 2,
+    backgroundColor: "#ffffff",
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  const imgWidth = 210;
+  const pageHeight = 295;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+  pdf.save("Emission_Report.pdf");
+
+  // ❌ Remove PDF mode after download
+  element.classList.remove("pdf-mode");
+};
 
   // ✅ Fetch Latest Emission (if no location.state)
   useEffect(() => {
@@ -127,6 +155,7 @@ const EmissionDashboard = () => {
       </button>
 
       {/* Summary Cards */}
+      <div id="report-section">
       <div className="card-grid">
         {chartData.map((item, index) => (
           <div className="emission-card1" key={index}>
@@ -186,8 +215,11 @@ const EmissionDashboard = () => {
           Consider optimizing operations in this area.
         </p>
       </div>
-      
+      </div>
       {/* Prediction */}
+      <button className="pdf-btn" onClick={downloadPDF}>
+         Download Emission Report
+      </button>
       <button
         className="predict-btn"
         onClick={() => navigate("/prediction")}
