@@ -128,3 +128,25 @@
   display: flex;
   margin-top: 0%;
 }
+
+/* CSV Section */
+.csv-section {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.csv-upload {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 12px 20px;
+  background: transparent;
+  border: 2px dashed #008080;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #00e0d3;
+  transition: 0.3s;
+}
+
+.csv-upload:hover {
+  background: rgba(0, 128, 128, 0.2);
+}
