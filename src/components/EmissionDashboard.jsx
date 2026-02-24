@@ -59,8 +59,8 @@ const EmissionDashboard = () => {
       </div>
 
       {/* ---------- Graph Section ---------- */}
+      <h2 className="analytics">Analytics</h2>
       <div className="graph-section">
-
         <div className="graph-box">
           <h3>Emission Distribution</h3>
           {/* Pie chart later */}
