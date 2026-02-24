@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-
-
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
@@ -36,10 +34,21 @@ const Login = () => {
     const userDoc = await getDoc(doc(db, "users", uid));
 
     if (userDoc.exists() && userDoc.data().mineInfo) {
-      // Mine already added → go to profile
-      navigate("/profile");
+
+      // 🔍 Now check if emissions already entered
+      const emissionsRef = collection(db, "users", uid, "emissions");
+      const snapshot = await getDocs(emissionsRef);
+
+      if (!snapshot.empty) {
+        // ✅ Emissions exist → go directly to dashboard
+        navigate("/dashboard");
+      } else {
+        // ✅ Mine exists but no emissions yet
+        navigate("/profile");
+      }
+
     } else {
-      // First time user → go to mine setup form
+      // ❌ No mine info → first time setup
       navigate("/minesetup");
     }
 

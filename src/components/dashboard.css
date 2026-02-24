@@ -101,7 +101,7 @@
 
 .insight-box {
   background: rgba(76, 72, 72, 0.12);
-  width: 50vw;
+  width: 45vw;
   border-radius: 15px;
   padding: 20px;
   margin-bottom: 30px;
@@ -122,3 +122,4 @@
 .predict-btn:hover {
   background: #30949d;
 }
+

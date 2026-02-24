@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./dashboard.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { auth,db } from "../firebase";
+import { auth, db } from "../firebase";
 import { signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import {
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+} from "firebase/firestore";
 
 import {
   PieChart,
@@ -22,27 +29,61 @@ import {
 const EmissionDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [mineName, setMineName] = useState("");
+  const [methane, setMethane] = useState(0);
+  const [diesel, setDiesel] = useState(0);
+  const [electricity, setElectricity] = useState(0);
+  const [explosives, setExplosives] = useState(0);
 
+  // ✅ Fetch Mine Name
   useEffect(() => {
-  const fetchMine = async () => {
-    const user = auth.currentUser;
+    const fetchMine = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
 
-    if (user) {
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         setMineName(docSnap.data().mineInfo?.name);
       }
-    }
-  };
+    };
 
-  fetchMine();
-}, []);
+    fetchMine();
+  }, []);
 
-  const { methane = 0, diesel = 0, electricity = 0, explosives = 0,} =
-    location.state || {};
+  // ✅ Fetch Latest Emission (if no location.state)
+  useEffect(() => {
+    const fetchLatestEmission = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      // If coming from form, use location.state
+      if (location.state) {
+        setMethane(location.state.methane || 0);
+        setDiesel(location.state.diesel || 0);
+        setElectricity(location.state.electricity || 0);
+        setExplosives(location.state.explosives || 0);
+        return;
+      }
+
+      // Otherwise fetch latest from Firestore
+      const emissionsRef = collection(db, "users", user.uid, "emissions");
+      const q = query(emissionsRef, orderBy("createdAt", "desc"), limit(1));
+      const snapshot = await getDocs(q);
+
+      if (!snapshot.empty) {
+        const data = snapshot.docs[0].data();
+        setMethane(data.methane || 0);
+        setDiesel(data.diesel || 0);
+        setElectricity(data.electricity || 0);
+        setExplosives(data.explosives || 0);
+      }
+    };
+
+    fetchLatestEmission();
+  }, [location.state]);
 
   const total = methane + diesel + electricity + explosives;
 
@@ -60,20 +101,32 @@ const EmissionDashboard = () => {
 
   const COLORS = ["#FBAF00", "#FFD639", "#FFA3AF", "#007CBE"];
 
-  const maxEmission = chartData.reduce((prev, current) =>
-    prev.value > current.value ? prev : current
-  );
+  const maxEmission =
+    chartData.reduce((prev, current) =>
+      prev.value > current.value ? prev : current
+    ) || chartData[0];
 
   return (
     <div className="dashboard-container">
       <nav className="navbar">
-        <h2 className="logo">Emission Summary - {mineName}</h2>
+        <h2 className="logo">
+          Emission Summary - {mineName || "Loading..."}
+        </h2>
         <button className="signout-btn" onClick={handleSignOut}>
           Sign Out
         </button>
       </nav>
 
-      {/* ---------- Summary Cards ---------- */}
+      {/* Re-enter Button */}
+      <button
+        className="predict-btn"
+        onClick={() => navigate("/profile")}
+        style={{ marginBottom: "20px" }}
+      >
+        Re-enter Emission Values
+      </button>
+
+      {/* Summary Cards */}
       <div className="card-grid">
         {chartData.map((item, index) => (
           <div className="emission-card1" key={index}>
@@ -88,7 +141,7 @@ const EmissionDashboard = () => {
         </div>
       </div>
 
-      {/* ---------- Graph Section ---------- */}
+      {/* Graph Section */}
       <h2 className="analytics">Analytics</h2>
       <div className="graph-section">
         <div className="graph-box">
@@ -125,7 +178,7 @@ const EmissionDashboard = () => {
         </div>
       </div>
 
-      {/* ---------- Insights ---------- */}
+      {/* Insights */}
       <div className="insight-box">
         <h3>Insights</h3>
         <p>
@@ -133,8 +186,8 @@ const EmissionDashboard = () => {
           Consider optimizing operations in this area.
         </p>
       </div>
-
-      {/* ---------- Prediction ---------- */}
+      
+      {/* Prediction */}
       <button
         className="predict-btn"
         onClick={() => navigate("/prediction")}
