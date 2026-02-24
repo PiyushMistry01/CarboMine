@@ -37,12 +37,12 @@
 
 /* Mine section */
 .mine-section {
-
   padding: 20px;
 }
 
 .mine-section h1{
   margin-top: 0%;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .carbon-btn {
