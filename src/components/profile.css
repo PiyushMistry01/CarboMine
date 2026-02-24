@@ -31,6 +31,10 @@
   cursor: pointer;
 }
 
+.signout-btn:hover{
+  background: #30949d;
+}
+
 /* Mine section */
 .mine-section {
 
@@ -78,7 +82,7 @@
 
 .result {
   margin-top: 20px;
-  color: #00e676;
+  color: white;
 }
 
 .next-btn {
