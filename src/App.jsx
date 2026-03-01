@@ -4,6 +4,7 @@ import Signup from "./components/Signup";
 import Profile from "./components/Profile";
 import MineSetup from "./components/MineSetup";
 import EmissionDashboard from "./components/EmissionDashboard";
+import Prediction from "./components/Prediction";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/minesetup" element={<MineSetup />} />
       <Route path="/dashboard" element={<EmissionDashboard />} />
+      <Route path="/prediction" element={<Prediction />}/>
     </Routes>
   );
 }
