@@ -12,6 +12,7 @@ const Prediction = () => {
   const [futureData, setFutureData] = useState([]);
   const [anomalies, setAnomalies] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
 
   const handleUpload = async () => {
     if (!file) return alert("Upload CSV file");
@@ -50,6 +51,8 @@ const Prediction = () => {
   const handleAskAI = async () => {
   console.log("Ask AI clicked");
 
+  setAiLoading(true);
+
   try {
     if (futureData.length === 0) {
       return alert("Please run prediction first");
@@ -77,6 +80,8 @@ const Prediction = () => {
     console.error(error);
     alert("AI analysis failed");
   }
+
+  setAiLoading(false);
 };
 
   return (
@@ -153,7 +158,7 @@ const Prediction = () => {
 
         {futureData.length > 0 && (
           <button onClick={handleAskAI} className="ask-ai-btn">
-            Ask AI
+            {aiLoading ? "Generating..." : "Ask AI"}
           </button>
         )}
     </div>
