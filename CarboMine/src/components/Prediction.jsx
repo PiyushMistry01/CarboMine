@@ -1,9 +1,13 @@
-
 import React, { useState } from "react";
 import "./prediction.css";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 const Prediction = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [file, setFile] = useState(null);
   const [futureData, setFutureData] = useState([]);
   const [anomalies, setAnomalies] = useState([]);
@@ -42,6 +46,38 @@ const Prediction = () => {
   ...item,
   week: Math.floor(index / 7) + 1,
 }));
+
+  const handleAskAI = async () => {
+  console.log("Ask AI clicked");
+
+  try {
+    if (futureData.length === 0) {
+      return alert("Please run prediction first");
+    }
+
+    const response = await fetch("http://127.0.0.1:5000/ask-ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        predictions: futureData.slice(0, 100),  // reduce size
+        anomalies: anomalies,
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+
+    navigate("/ai-summary", { state: { analysis: data.analysis } });
+
+  } catch (error) {
+    console.error(error);
+    alert("AI analysis failed");
+  }
+};
 
   return (
     <div className="prediction-container">
@@ -114,6 +150,12 @@ const Prediction = () => {
           </table>
         </div>
       )}
+
+        {futureData.length > 0 && (
+          <button onClick={handleAskAI} className="ask-ai-btn">
+            Ask AI
+          </button>
+        )}
     </div>
   );
 };

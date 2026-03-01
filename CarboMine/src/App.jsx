@@ -5,6 +5,7 @@ import Profile from "./components/Profile";
 import MineSetup from "./components/MineSetup";
 import EmissionDashboard from "./components/EmissionDashboard";
 import Prediction from "./components/Prediction";
+import AISummary from "./components/AISummary";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/minesetup" element={<MineSetup />} />
       <Route path="/dashboard" element={<EmissionDashboard />} />
       <Route path="/prediction" element={<Prediction />}/>
+      <Route path="/ai-summary" element={<AISummary />}/>
     </Routes>
   );
 }

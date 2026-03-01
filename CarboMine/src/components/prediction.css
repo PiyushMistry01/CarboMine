@@ -130,3 +130,14 @@
     min-height: 300px;
   }
 }
+
+.ask-ai-btn{
+  padding: 12px 22px;
+  background: #008080;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.3s;
+}
