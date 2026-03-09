@@ -68,7 +68,7 @@ def ask_ai():
         Minimum predicted emissions: {min_pred:.2f} tCO2e
         Number of anomalies detected: {len(anomalies)}
 
-        Return only these sections:
+        Return only these sections, nothing else at all:
         Overall Emission Trend
         Risk Level
         ESG Risk Score

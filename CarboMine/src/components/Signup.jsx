@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -45,6 +45,29 @@ const Signup = () => {
   }
 };
 
+const handleGoogleSignup = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    // Save user to Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      email: user.email,
+      createdAt: new Date(),
+    });
+
+    alert("Google signup successful!");
+
+    // Redirect to login page
+    navigate("/login");
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+};
 
 
   return (
@@ -77,6 +100,14 @@ const Signup = () => {
           <button type="submit" className="login-btn">
             Signup
           </button>
+
+          <button
+  type="button"
+  className="google-btn"
+  onClick={handleGoogleSignup}
+>
+  Continue with Google
+</button>
         </form>
 
         <p className="footer-text">

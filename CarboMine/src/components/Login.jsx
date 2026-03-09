@@ -5,6 +5,7 @@ import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -58,6 +59,36 @@ const Login = () => {
   }
 };
 
+const handleGoogleLogin = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+
+    const result = await signInWithPopup(auth, provider);
+    const uid = result.user.uid;
+
+    // 🔍 Check if mine info exists
+    const userDoc = await getDoc(doc(db, "users", uid));
+
+    if (userDoc.exists() && userDoc.data().mineInfo) {
+
+      const emissionsRef = collection(db, "users", uid, "emissions");
+      const snapshot = await getDocs(emissionsRef);
+
+      if (!snapshot.empty) {
+        navigate("/dashboard");
+      } else {
+        navigate("/profile");
+      }
+
+    } else {
+      navigate("/minesetup");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+};
 
   return (
     <div className="login-container">
@@ -89,6 +120,13 @@ const Login = () => {
           <button type="submit" className="login-btn">
             Login
           </button>
+          <button
+  type="button"
+  className="google-btn"
+  onClick={handleGoogleLogin}
+>
+  Continue with Google
+</button>
         </form>
 
         <p className="footer-text">
