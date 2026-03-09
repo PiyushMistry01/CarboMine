@@ -158,7 +158,7 @@ const Prediction = () => {
 
         {futureData.length > 0 && (
           <button onClick={handleAskAI} className="ask-ai-btn">
-            {aiLoading ? "Generating..." : "Ask AI"}
+            {aiLoading ? "Generating...This may take some time" : "Ask AI"}
           </button>
         )}
     </div>

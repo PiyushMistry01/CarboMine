@@ -3,7 +3,6 @@ from flask_cors import CORS
 from forecast import process_and_predict
 import os
 from dotenv import load_dotenv
-from google import genai
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
@@ -12,14 +11,6 @@ from reportlab.lib.units import inch
 # Load Environment Variables
 # ==============================
 load_dotenv()
-
-api_key = os.getenv("GEMINI_API_KEY")
-
-if not api_key:
-    raise ValueError("GEMINI_API_KEY not found in .env file")
-
-# ✅ NEW Gemini Client (2026)
-client = genai.Client(api_key=api_key)
 
 # ==============================
 # Initialize Flask App
@@ -58,49 +49,44 @@ def ask_ai():
         anomalies = data.get("anomalies", [])
         raw_data = data.get("rawData", [])
 
+        # Reduce dataset size drastically
+        raw_sample = raw_data[:10]
+        pred_sample = predictions[:10]
+        anom_sample = anomalies[:5]
+
+        avg_pred = sum(p["Total_Emissions (tCO2e)"] for p in predictions) / len(predictions) if predictions else 0
+        max_pred = max(p["Total_Emissions (tCO2e)"] for p in predictions) if predictions else 0
+        min_pred = min(p["Total_Emissions (tCO2e)"] for p in predictions) if predictions else 0
+
         prompt = f"""
-        You are an expert ESG and sustainability analyst.
+        You are an ESG sustainability analyst for mining operations.
 
-        Analyze this mining carbon emission dataset.
+        Dataset summary:
 
-        Historical Data:
-        {raw_data}
+        Average predicted emissions: {avg_pred:.2f} tCO2e
+        Maximum predicted emissions: {max_pred:.2f} tCO2e
+        Minimum predicted emissions: {min_pred:.2f} tCO2e
+        Number of anomalies detected: {len(anomalies)}
 
-        Future Predictions:
-        {predictions}
+        Return only these sections:
+        Overall Emission Trend
+        Risk Level
+        ESG Risk Score
+        Anomaly Analysis
+        Business & Compliance Risks
+        Sustainability Recommendations
+        Executive Summary
 
-        Detected Anomalies:
-        {anomalies}
+        Limit the response upto 250 words.
+        Do not include any other instructions or tasks.
 
-        Provide output STRICTLY in this format:
-
-        ### Overall Emission Trend
-        <content>
-
-        ### Risk Level
-        <Low / Medium / High>
-
-        ### ESG Risk Score
-        <score out of 100>
-
-        ### Anomaly Analysis
-        <content>
-
-        ### Business & Compliance Risks
-        <content>
-
-        ### Sustainability Recommendations
-        <content>
-
-        ### Executive Summary
-        <short summary>
         """
 
         # 🔥 LOCAL AI CALL
         response = requests.post(
             "http://localhost:11434/api/generate",
             json={
-                "model": "mistral",
+                "model": "phi3:mini",
                 "prompt": prompt,
                 "stream": False
             }

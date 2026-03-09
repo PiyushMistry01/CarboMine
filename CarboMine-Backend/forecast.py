@@ -8,8 +8,32 @@ def process_and_predict(file_path):
     df = pd.read_csv(file_path)
     df.columns = df.columns.str.strip()
 
-    df["Date"] = pd.to_datetime(df["Date"], format="%d-%m-%Y")
+    df["Date"] = pd.to_datetime(df["Date"], errors="coerce", dayfirst=True)
+    df = df.dropna(subset=["Date"])
     df = df.sort_values("Date")
+
+    # ==============================
+# AUTO CALCULATE EMISSIONS IF MISSING
+# ==============================
+
+    if "Total_Emissions (tCO2e)" not in df.columns:
+
+        print("Emission column missing. Calculating using emission factors...")
+
+        # Example emission factors (you can justify these in viva)
+        EF_coal = 0.0025
+        EF_diesel = 0.0027
+        EF_electricity = 0.0008
+        EF_explosives = 0.0012
+        EF_vam = 0.015
+
+        df["Total_Emissions (tCO2e)"] = (
+            df["Coal_Production (Tonnes)"] * EF_coal +
+            df["Fuel_Diesel (Litres)"] * EF_diesel +
+            df["Electricity_Grid (kWh)"] * EF_electricity +
+            df["Explosives (kg)"] * EF_explosives +
+            df["VAM_Concentration%"] * EF_vam
+        )
 
     # Time features
     df["month"] = df["Date"].dt.month
